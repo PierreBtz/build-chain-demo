@@ -1,5 +1,15 @@
 # buildchaindemo
 
+This repository is Work In Progress.
+
+The aim is to build a complete _build and deployment chain_ (build/test/reports/documentation/deployment).
+The toolchain should be deployable with a single command (probably via docker compose).
+In order to have a demonstration, I need to build some code.
+I decided to generate a simple JHipster application (find documentation below) for demonstration purpose.
+Nothing from the generated application will be changed except for the generated _Jenkinsfile_.
+
+---
+
 This application was generated using JHipster 3.9.1, you can find documentation and help at [https://jhipster.github.io/documentation-archive/v3.9.1](https://jhipster.github.io/documentation-archive/v3.9.1).
 
 ## Development

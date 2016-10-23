@@ -5,8 +5,10 @@ node {
     }
 
     stage('install') {
-        docker.image('node:6.9.0').inside{
-            sh "npm install"
+        node {
+            docker.image('node:6.9.0').inside{
+                sh "npm install"
+            }
         }
     }
 

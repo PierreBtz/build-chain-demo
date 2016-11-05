@@ -1,40 +1,39 @@
-#!/usr/bin/env groovy
+#!groovy​
 
-stage('checkout') {
-  node('master') {
-    checkout scm
-  }
-}
-
-stage('install') {
-  node('master') {
-    docker.image('node:6.9.0').inside{
-      sh "npm install"
+  stage('checkout') {
+    node('master') {
+      checkout scm
     }
   }
-}
 
-stage('tests') {
-  parallel 'backend': {
+  stage('install') {
     node('master') {
-      docker.image('3.3.9-jdk-8').inside{
-        sh "./mvnw test"
+      docker.image('node:6.9.0').inside{
+        sh "npm install"
       }
     }
-    }, 'frontend': {
+  }
+
+  stage('tests') {
+    parallel 'backend': {
       node('master') {
-        docker.image('node:6.9.0').inside{
-          sh "gulp test"
+        docker.image('3.3.9-jdk-8').inside{
+          sh "./mvnw test"
+        }
+      }
+      }, 'frontend': {
+        node('master') {
+          docker.image('node:6.9.0').inside{
+            sh "gulp test"
+          }
         }
       }
     }
-  }
-}
 
-stage('packaging') {
-  node('master') {
-    docker.image('3.3.9-jdk-8').inside{
-      sh "./mvnw package -Pprod -DskipTests"
+  stage('packaging') {
+    node('master') {
+      docker.image('3.3.9-jdk-8').inside{
+        sh "./mvnw package -Pprod -DskipTests"
+      }
     }
   }
-}

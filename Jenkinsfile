@@ -1,36 +1,41 @@
-node {
-    // uncomment these 2 lines and edit the name 'node-4.6.0' according to what you choose in configuration
-    // def nodeHome = tool name: 'node-4.6.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-    // env.PATH = "${nodeHome}/bin:${env.PATH}"
+#!groovy​
 
-    stage('check tools') {
-        sh "node -v"
-        sh "npm -v"
-        sh "bower -v"
-        sh "gulp -v"
+  stage('checkout') {
+    node('master') {
+      checkout scm
     }
+  }
 
-    stage('checkout') {
-        checkout scm
-    }
-
-    stage('npm install') {
+  stage('install') {
+    node('master') {
+      docker.image('node:6.9.0').inside{
         sh "npm install"
+	stash 'installed-app'
+      }
+    }
+  }
+
+  stage('tests') {
+    parallel 'backend': {
+      node('master') {
+        docker.image('maven:3.3.9-jdk-8').inside{
+          sh "./mvnw test"
+        }
+      }
+      }, 'frontend': {
+        node('master') {
+          docker.image('node:6.9.0').inside{
+	    unstash 'installed-app'
+            sh "npm install -g gulp && gulp test"
+          }
+        }
+      }
     }
 
-    stage('clean') {
-        sh "./mvnw clean"
-    }
-
-    stage('backend tests') {
-        sh "./mvnw test"
-    }
-
-    stage('frontend tests') {
-        sh "gulp test"
-    }
-
-    stage('packaging') {
+  stage('packaging') {
+    node('master') {
+      docker.image('maven:3.3.9-jdk-8').inside{
         sh "./mvnw package -Pprod -DskipTests"
+      }
     }
-}
+  }

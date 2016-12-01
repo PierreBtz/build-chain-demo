@@ -1,16 +1,17 @@
-FROM jenkinsci/jenkins:2.26
+FROM jenkinsci/jenkins:2.30
 MAINTAINER Pierre Beitz <PierreBtz@users.noreply.github.com>
 
 USER root
 
-RUN apt-get update && apt-get install -y docker.io && rm -rf /var/lib/apt/lists/*
+RUN curl -sSL https://get.docker.com/ | sh
 
-RUN usermod -a -G docker jenkins
+RUN usermod -a -G staff jenkins
 
-RUN /usr/local/bin/install-plugins.sh blueocean
+RUN echo 2.31 > /usr/share/jenkins/ref/jenkins.install.UpgradeWizard.state && \
+    echo 2.31 > /usr/share/jenkins/ref/jenkins.install.InstallUtil.lastExecVersion
 
-#we should get back to user jenkins but I have an issue with this for the moment:
-# dial unix /var/run/docker/sock: permission denied. (despite the usermod line before).
-USER jenkins
+RUN /usr/local/bin/install-plugins.sh docker-workflow blueocean
+
+#USER jenkins
 
 EXPOSE 8080

@@ -724,7 +724,7 @@
                                     <goal>install-node-and-npm</goal>
                                 </goals>
                                 <configuration>
-                                    <nodeVersion>v4.6.0</nodeVersion>
+                                    <nodeVersion>v6.9.0</nodeVersion>
                                     <npmVersion>3.10.8</npmVersion>
                                 </configuration>
                             </execution>
@@ -752,7 +752,7 @@
                                     <goal>bower</goal>
                                 </goals>
                                 <configuration>
-                                    <arguments>install --no-color</arguments>
+                                    <arguments>install --no-color --allow-root</arguments>
                                 </configuration>
                             </execution>
                             <execution>

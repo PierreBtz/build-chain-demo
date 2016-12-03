@@ -19,14 +19,14 @@
     parallel 'backend': {
       node('master') {
         docker.image('maven:3.3.9-jdk-8').inside{
-          sh "./mvnw test"
+          sh 'mvn test'
         }
       }
       }, 'frontend': {
         node('master') {
           docker.image('node:6.9.0').inside{
 	    unstash 'installed-app'
-            sh "npm install -g gulp && gulp test"
+            sh 'npm install -g gulp && gulp test'
           }
         }
       }
@@ -35,7 +35,7 @@
   stage('packaging') {
     node('master') {
       docker.image('maven:3.3.9-jdk-8').inside{
-        sh "./mvnw package -Pprod -DskipTests"
+        sh 'mvn package -Pprod -DskipTests'
       }
     }
   }

@@ -1,6 +1,14 @@
 version: "2"
 
 services:
+  jenkins:
+    build: ./jenkins
+    image: jenkinsdev
+    ports:
+      - "80:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - jenkins_home:/var/jenkins_home
   sonarqube:
     image: sonarqube:6.1
     ports:
@@ -20,3 +28,6 @@ services:
 networks:
   sonar:
     driver: bridge
+
+volumes:
+  jenkins_home:
